@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: auth-service
+  data:
+    mongodb:
+      port: 27017
+      database: mongo_auth
+
+server:
+  port: 8881
+
