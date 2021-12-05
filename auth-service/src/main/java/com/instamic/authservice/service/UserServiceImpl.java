@@ -10,6 +10,9 @@ import com.instamic.authservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -47,11 +50,18 @@ public class UserServiceImpl implements UserService {
 
         user.setActive(true);
         user.setPassword(request.getPassword());
-        user.setRoles(Role.USER);
+        user.setRoles(new HashSet<>() {{
+            add(Role.USER);
+        }});
 
         User savedUser = userRepository.save(user);
         // TODO: add async messaging
         return savedUser;
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        log.info("UserServiceImpl.findByUsername started with username: {}", username);
+        return userRepository.findByUsername(username);
+    }
 }

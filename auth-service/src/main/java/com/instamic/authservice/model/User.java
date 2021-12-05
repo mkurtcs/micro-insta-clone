@@ -48,5 +48,17 @@ public class User {
 
     private boolean active;
     private Profile userProfile;
-    private Role roles;
+    private Set<Role> roles;
+
+    public User(User user) {
+        this.id = user.id;
+        this.username = user.username;
+        this.password = user.password;
+        this.email = user.email;
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
+        this.active = user.active;
+        this.userProfile = user.userProfile;
+        this.roles = user.roles;
+    }
 }

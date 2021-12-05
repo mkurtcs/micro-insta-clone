@@ -2,5 +2,16 @@ package com.instamic.authservice.model;
 
 public enum Role {
 
-    USER, ADMIN, SERVICE
+    USER("USER"), ADMIN("ADMIN"), SERVICE("SERVICE");
+
+
+    private String name;
+
+    Role(String name) {
+
+    }
+
+    public String getName() {
+        return name;
+    }
 }
