@@ -68,13 +68,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                         authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
             } else {
                 auth = userService.findByUsername(username)
-                        .map(InstaUserDetails::new)
-                        .map(instaUserDetails -> {
+                        .map(UserDetailsImpl::new)
+                        .map(userDetailsImpl -> {
                             UsernamePasswordAuthenticationToken authenticationToken =
                                     new UsernamePasswordAuthenticationToken(
-                                            instaUserDetails,
+                                            userDetailsImpl,
                                             null,
-                                            instaUserDetails.getAuthorities());
+                                            userDetailsImpl.getAuthorities());
 
                             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             return authenticationToken;

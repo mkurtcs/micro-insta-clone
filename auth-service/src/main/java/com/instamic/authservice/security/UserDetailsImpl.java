@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
-public class InstaUserDetails extends User implements UserDetails {
+public class UserDetailsImpl extends User implements UserDetails {
 
-    public InstaUserDetails(final User user) {
+    public UserDetailsImpl(final User user) {
         super(user);
     }
 
