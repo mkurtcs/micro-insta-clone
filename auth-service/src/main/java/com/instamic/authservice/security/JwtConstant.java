@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-public class JwtConfig {
+public class JwtConstant {
 
     @Value("${security.jwt.uri:/auth/**}")
     private String Uri;

@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtConfig jwtConfig;
+    private final JwtConstant jwtConstant;
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
     private final String serviceUsername;
 
-    public JwtTokenAuthenticationFilter(JwtConfig jwtConfig, JwtTokenProvider tokenProvider, UserService userService, String serviceUsername) {
-        this.jwtConfig = jwtConfig;
+    public JwtTokenAuthenticationFilter(JwtConstant jwtConstant, JwtTokenProvider tokenProvider, UserService userService, String serviceUsername) {
+        this.jwtConstant = jwtConstant;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
         this.serviceUsername = serviceUsername;
@@ -35,10 +35,10 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 1. get the authentication header. Tokens are supposed to be passed in the authentication header
-        String header = request.getHeader(jwtConfig.getHeader());
+        String header = request.getHeader(jwtConstant.getHeader());
 
         // 2. validate the header and check the prefix
-        if(header == null || !header.startsWith(jwtConfig.getPrefix())) {
+        if(header == null || !header.startsWith(jwtConstant.getPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,7 +50,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         // And If user tried to access without access token, then he won't be authenticated and an exception will be thrown.
 
         // 3. Get the token
-        String token = header.replace(jwtConfig.getPrefix(), "");
+        String token = header.replace(jwtConstant.getPrefix(), "");
 
         if(tokenProvider.validateToken(token)) {
             Claims claims = tokenProvider.getClaimsFromJWT(token);

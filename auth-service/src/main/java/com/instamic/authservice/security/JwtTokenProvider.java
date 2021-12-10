@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private JwtConstant jwtConstant;
 
 
     public String generateToken(Authentication authentication) {
@@ -25,14 +25,14 @@ public class JwtTokenProvider {
                 .claim("authorities", authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000L))  // in milliseconds
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
+                .setExpiration(new Date(now + jwtConstant.getExpiration() * 1000L))  // in milliseconds
+                .signWith(SignatureAlgorithm.HS512, jwtConstant.getSecret().getBytes())
                 .compact();
     }
 
     public Claims getClaimsFromJWT(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtConfig.getSecret().getBytes())
+                .setSigningKey(jwtConstant.getSecret().getBytes())
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -40,7 +40,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtConfig.getSecret().getBytes())
+                    .setSigningKey(jwtConstant.getSecret().getBytes())
                     .parseClaimsJws(authToken);
 
             return true;
