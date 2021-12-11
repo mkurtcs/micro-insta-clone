@@ -20,17 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -38,6 +31,25 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public LoginResponse loginUser(LoginRequest request) {
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(request.getUsername(),
+                                request.getPassword())
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return new LoginResponse(jwtTokenProvider.generateToken(authentication));
+    }
 
     @Override
     public User registerUser(SignUpRequest request) {
@@ -73,25 +85,5 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         // TODO: add async messaging
         return savedUser;
-    }
-
-    @Override
-    public LoginResponse loginUser(LoginRequest request) {
-
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(request.getUsername(),
-                                request.getPassword())
-                );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return new LoginResponse(jwtTokenProvider.generateToken(authentication));
-    }
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        log.info("UserServiceImpl.findByUsername started with username: {}", username);
-        return userRepository.findByUsername(username);
     }
 }

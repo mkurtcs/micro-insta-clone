@@ -1,7 +1,7 @@
 package com.instamic.authservice.security;
 
 import com.instamic.authservice.model.Role;
-import com.instamic.authservice.service.UserService;
+import com.instamic.authservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
+public class InstamicWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -34,7 +34,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Value("${security.service.username}")
     private String serviceUsername;
@@ -50,7 +50,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtConstant, jwtTokenProvider, userService, serviceUsername), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenAuthenticationFilter(jwtConstant, jwtTokenProvider, userRepository, serviceUsername), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/signin").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").anonymous()

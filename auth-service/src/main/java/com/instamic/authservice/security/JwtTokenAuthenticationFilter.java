@@ -1,6 +1,6 @@
 package com.instamic.authservice.security;
 
-import com.instamic.authservice.service.UserService;
+import com.instamic.authservice.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,13 +20,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtConstant jwtConstant;
     private final JwtTokenProvider tokenProvider;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final String serviceUsername;
 
-    public JwtTokenAuthenticationFilter(JwtConstant jwtConstant, JwtTokenProvider tokenProvider, UserService userService, String serviceUsername) {
+    public JwtTokenAuthenticationFilter(JwtConstant jwtConstant, JwtTokenProvider tokenProvider, UserRepository userRepository, String serviceUsername) {
         this.jwtConstant = jwtConstant;
         this.tokenProvider = tokenProvider;
-        this.userService = userService;
+        this.userRepository = userRepository;
         this.serviceUsername = serviceUsername;
     }
 
@@ -67,7 +67,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                         null,
                         authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
             } else {
-                auth = userService.findByUsername(username)
+                auth = userRepository.findByUsername(username)
                         .map(UserDetailsImpl::new)
                         .map(userDetailsImpl -> {
                             UsernamePasswordAuthenticationToken authenticationToken =
