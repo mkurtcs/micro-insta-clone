@@ -52,8 +52,8 @@ public class InstamicWebSecurityConfigurerAdapter extends WebSecurityConfigurerA
                 .and()
                 .addFilterBefore(new JwtTokenAuthenticationFilter(jwtConstant, jwtTokenProvider, userRepository, serviceUsername), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/signin").permitAll()
-                .antMatchers(HttpMethod.POST, "/users").anonymous()
+                .antMatchers(HttpMethod.POST, "/user/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/user").anonymous()
                 .anyRequest().authenticated();
     }
 

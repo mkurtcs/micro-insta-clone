@@ -5,11 +5,13 @@ import com.instamic.authservice.exception.UsernameAlreadyExistsException;
 import com.instamic.authservice.model.Profile;
 import com.instamic.authservice.model.Role;
 import com.instamic.authservice.model.User;
+import com.instamic.authservice.model.UserSummary;
 import com.instamic.authservice.model.request.LoginRequest;
 import com.instamic.authservice.model.request.SignUpRequest;
 import com.instamic.authservice.model.response.LoginResponse;
 import com.instamic.authservice.repository.UserRepository;
 import com.instamic.authservice.security.JwtTokenProvider;
+import com.instamic.authservice.security.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -86,4 +88,16 @@ public class AuthServiceImpl implements AuthService {
         // TODO: add async messaging
         return savedUser;
     }
+
+    @Override
+    public UserSummary getCurrentUser(UserDetailsImpl userDetails) {
+        return UserSummary
+                .builder()
+                .id(userDetails.getId())
+                .username(userDetails.getUsername())
+                .name(userDetails.getUserProfile().getDisplayName())
+                .profilePicture(userDetails.getUserProfile().getProfilePictureUrl())
+                .build();
+    }
+
 }
