@@ -2,6 +2,9 @@ spring:
   application:
     name: media-service
 
+server:
+  port: 8882
+
 security:
   basic:
     enable: false
@@ -12,3 +15,8 @@ security:
     prefix: Bearer
     expiration: 86400
     secret: JwtSecretKey
+
+file:
+  upload-dir: /Users/mustafa.kurt/mkurt/instamic-persistent/images
+  path:
+    prefix: /images
