@@ -1,6 +1,10 @@
 spring:
   application:
     name: media-service
+  data:
+    mongodb:
+      port: 27017
+      database: mongo_media
 
 server:
   port: 8882

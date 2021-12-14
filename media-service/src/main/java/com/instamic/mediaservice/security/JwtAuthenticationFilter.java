@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(jwtConstant.getHeader());
 
         // 2. validate the header and check the prefix
-        if(header == null || header.startsWith(jwtConstant.getPrefix())) {
+        if(header == null || !header.startsWith(jwtConstant.getPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -1,5 +1,6 @@
 package com.instamic.mediaservice.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 public class InstamicWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private final JwtConstant jwtConstant;
+
+    @Value("${file.path.prefix}")
+    private String filePathPrefix;
 
     public InstamicWebSecurityConfigurerAdapter(JwtConstant jwtConstant) {
         this.jwtConstant = jwtConstant;
@@ -30,7 +34,7 @@ public class InstamicWebSecurityConfigurerAdapter extends WebSecurityConfigurerA
                 // Add a filter to validate the tokens with every request
                 .addFilterAfter(new JwtAuthenticationFilter(jwtConstant), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/images/**").permitAll()
+                //.antMatchers(filePathPrefix + "/**").anonymous()
                 .anyRequest().authenticated();
     }
 }
